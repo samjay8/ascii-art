@@ -26,7 +26,7 @@ func main() {
 	var lines []string
 
 	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
+		bannerlines = append(bannerlines, scanner.Text())
 	}
 
 	textsplit := strings.Split(input, `\n`)
@@ -39,8 +39,8 @@ func main() {
 		for row := 0; row < 8; row++ {
 			var rowString string
 			for col := 0; col < len(char); col++ {
-				startline := int(char[col]-32) * 9
-				rowString += lines[startline+row]
+				position := int(char[col]-32) * 9
+				rowString += bannerlines[position+row]
 			}
 			fmt.Println(rowString)
 		}
