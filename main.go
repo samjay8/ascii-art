@@ -1,10 +1,10 @@
 package main
 
 import (
+	ascii "ascii/Convert"
 	"bufio"
 	"fmt"
 	"os"
-	"strings"
 )
 
 func main() {
@@ -23,27 +23,12 @@ func main() {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	var lines []string
+	var bannerlines []string
 
 	for scanner.Scan() {
 		bannerlines = append(bannerlines, scanner.Text())
 	}
 
-	textsplit := strings.Split(input, `\n`)
-
-	for _, char := range textsplit {
-		if char == "" {
-			fmt.Println()
-			continue
-		}
-		for row := 0; row < 8; row++ {
-			var rowString string
-			for col := 0; col < len(char); col++ {
-				position := int(char[col]-32) * 9
-				rowString += bannerlines[position+row]
-			}
-			fmt.Println(rowString)
-		}
-	}
-
+	result := ascii.AsciiArt(input, bannerlines)
+	fmt.Print(result)
 }
