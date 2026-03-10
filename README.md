@@ -38,6 +38,6 @@ go run . "Hello\n\nThere" | cat -e
 The project should handle an input with numbers, letters, spaces, special characters and `\n`
 
 ## Author
-**Samuel Ojetunde** | **Chima Stephen**
+**Samuel Ojetunde**
 
 ---
