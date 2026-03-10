@@ -8,7 +8,7 @@ func AsciiArt(input string, bannerlines []string) string {
 	if input == "" {
 		return ""
 	}
-	if input == "\\n" {
+	if input == `\n` {
 		return "\n"
 	}
 
