@@ -1,60 +1,44 @@
 package ascii
 
 import (
-	"strings"
+	"bufio"
+	"os"
 	"testing"
 )
 
-func stubBanner() []string {
-	lines := make([]string, 95*9)
-	for c := 32; c < 127; c++ {
-		base := (c - 32) * 9
-		for row := 0; row < 8; row++ {
-			lines[base+row] = string(rune(c))
-		}
+func TestAscii(t *testing.T) {
+	type testCase struct {
+		name     string
+		input    string
+		expected string
 	}
-	return lines
-}
 
-var b = stubBanner()
-
-func rowCount(r string) int {
-	return len(strings.Split(strings.TrimRight(r, "\n"), "\n"))
-}
-
-func TestSingleChar(t *testing.T) {
-	if rowCount(AsciiArt("A", b)) != 8 {
-		t.Errorf("want 8 rows, got %d", rowCount(AsciiArt("A", b)))
+	file, err := os.Open("../standard.txt")
+	if err != nil {
+		t.Fatal("Error opening file", err)
 	}
-}
+	defer file.Close()
 
-func TestMultiChar(t *testing.T) {
-	r := strings.Split(strings.TrimRight(AsciiArt("Hi", b), "\n"), "\n")
-	if r[0] != "Hi" {
-		t.Errorf("got %q, want \"Hi\"", r[0])
+	var bannerlines []string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		bannerlines = append(bannerlines, scanner.Text())
 	}
-}
 
-func TestNewlineSplits(t *testing.T) {
-	if rowCount(AsciiArt(`A\nB`, b)) != 16 {
-		t.Errorf("want 16 rows, got %d", rowCount(AsciiArt(`A\nB`, b)))
+	tests := []testCase{
+		{"hello", "Hello", " _    _          _   _          \n| |  | |        | | | |         \n| |__| |   ___  | | | |   ___   \n|  __  |  / _ \\ | | | |  / _ \\  \n| |  | | |  __/ | | | | | (_) | \n|_|  |_|  \\___| |_| |_|  \\___/  \n                                \n                                \n"},
+		{"newline", `Hello\nThere`, " _    _          _   _          \n| |  | |        | | | |         \n| |__| |   ___  | | | |   ___   \n|  __  |  / _ \\ | | | |  / _ \\  \n| |  | | |  __/ | | | | | (_) | \n|_|  |_|  \\___| |_| |_|  \\___/  \n                                \n                                \n _______   _                           \n|__   __| | |                          \n   | |    | |__     ___   _ __    ___  \n   | |    |  _ \\   / _ \\ | '__|  / _ \\ \n   | |    | | | | |  __/ | |    |  __/ \n   |_|    |_| |_|  \\___| |_|     \\___| \n                                       \n                                       \n"},
+		{"empty", "", "\n"},
+		{"numbers", "123", "                    \n _   ____    _____  \n/ | |___ \\  |___ /  \n| |   __) |   |_ \\  \n| |  / __/   ___) | \n|_| |_____| |____/  \n                    \n                    \n"},
+		{"spaces", "Hello World", " _    _          _   _          __          __                 _       _  \n| |  | |        | | | |               \\ \\        / /                | |     | | \n| |__| |   ___  | | | |   ___          \\ \\  /\\  / /    ___    _ __  | |   __| | \n|  __  |  / _ \\ | | | |  / _ \\          \\ \\/  \\/ /    / _ \\  | '__| | |  / _` | \n| |  | | |  __/ | | | | | (_) |          \\  /\\  /    | (_) | | |    | | | (_| | \n|_|  |_|  \\___| |_| |_|  \\___/            \\/  \\/      \\___/  |_|    |_|  \\__,_| \n                                                                                \n                                                                                \n"},
 	}
-}
 
-func TestEmptySegment(t *testing.T) {
-	if AsciiArt(`\n`, b) != "\n\n" {
-		t.Errorf("got %q, want \"\\n\\n\"", AsciiArt(`\n`, b))
-	}
-}
-
-func TestEndsWithNewline(t *testing.T) {
-	if !strings.HasSuffix(AsciiArt("Hello", b), "\n") {
-		t.Error("result does not end with newline")
-	}
-}
-
-func TestSpace(t *testing.T) {
-	if rowCount(AsciiArt(" ", b)) != 8 {
-		t.Errorf("want 8 rows, got %d", rowCount(AsciiArt(" ", b)))
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := AsciiArt(tc.input, bannerlines)
+			if got != tc.expected {
+				t.Errorf("AsciiArt(%q) = %q, expected = %q", tc.input, got, tc.expected)
+			}
+		})
 	}
 }
