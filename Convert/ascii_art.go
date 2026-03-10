@@ -1,9 +1,13 @@
 package ascii
 
-import "strings"
+import (
+	"strings"
+)
 
 func AsciiArt(input string, bannerlines []string) string {
-
+	if input == "" {
+		return ""
+	}
 	textsplit := strings.Split(input, `\n`)
 	var result string
 
@@ -12,6 +16,7 @@ func AsciiArt(input string, bannerlines []string) string {
 			result += "\n"
 			continue
 		}
+
 		for row := 0; row < 8; row++ {
 			var rowString string
 			for col := 0; col < len(char); col++ {
