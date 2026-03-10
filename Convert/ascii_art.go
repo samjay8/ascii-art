@@ -9,7 +9,7 @@ func AsciiArt(input string, bannerlines []string) string {
 		return ""
 	}
 	if input == "\n" {
-		return "\n"
+		return "\\n"
 	}
 
 	textsplit := strings.Split(input, `\n`)
