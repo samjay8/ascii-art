@@ -25,7 +25,7 @@ func AsciiArt(input string, bannerlines []string) string {
 			var rowString string
 			for col := 0; col < len(char); col++ {
 				position := int(char[col]-32) * 9
-				rowString += bannerlines[position+row]
+				rowString += bannerlines[position+1+row]
 			}
 			result += rowString + "\n"
 		}
